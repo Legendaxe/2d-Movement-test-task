@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InjurityController : MonoBehaviour
+{
+
+    // Limb sturct
+    [System.Serializable]
+    protected struct Limb
+    {
+        public string name;
+        public bool injurityStatus;
+        public int healthPoin;
+    }
+
+    // Staff for import Limbs;
+    protected Dictionary<string, Limb> limbs = new Dictionary<string, Limb>();
+    [SerializeField] protected Limb[] limbsImport = new Limb[5];
+
+
+    // Other 
+    [SerializeField] GameObject Player;
+    protected MyCharacterControler myCharacterControler;
+
+    
+
+    private void Awake()
+    {
+        myCharacterControler = Player.GetComponent<MyCharacterControler>();
+        FullHeal();
+    }
+
+    public bool InjurityCheck(string limbName)
+    {
+        if (limbs[limbName].injurityStatus)
+        {
+            return true;
+        }
+        return false;
+    }
+    // Full heal
+    public void FullHeal()
+    {
+        limbs.Clear();
+        foreach (var item in limbsImport)
+        {
+            limbs.Add(item.name, item);
+        }
+    }
+
+    public void NewLimbStatus(string limbname, int hpChange, bool status )
+    {
+        Limb temp = limbs[limbname];
+        temp.healthPoin += hpChange;
+        temp.injurityStatus = status;
+        limbs[limbname] = temp;
+        
+    }
+
+}
