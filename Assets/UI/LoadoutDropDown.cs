@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class LoadoutDropDown : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] protected GameObject invCntrl;
-    [SerializeField] protected Dropdown invDropdown;
+    [SerializeField] private GameObject invCntrl;
+    [SerializeField] private Dropdown invDropdown;
 
-    protected InventoryController inventoryController;
+    private InventoryController inventoryController;
 
     private void Awake()
     {

@@ -7,7 +7,7 @@ public class InjurityController : MonoBehaviour
 
     // Limb sturct
     [System.Serializable]
-    protected struct Limb
+    private struct Limb
     {
         public string name;
         public bool injurityStatus;
@@ -15,13 +15,13 @@ public class InjurityController : MonoBehaviour
     }
 
     // Staff for import Limbs;
-    protected Dictionary<string, Limb> limbs = new Dictionary<string, Limb>();
-    [SerializeField] protected Limb[] limbsImport = new Limb[5];
+    private Dictionary<string, Limb> limbs = new Dictionary<string, Limb>();
+    [SerializeField] private Limb[] limbsImport = new Limb[5];
 
 
     // Other 
     [SerializeField] GameObject Player;
-    protected MyCharacterControler myCharacterControler;
+    private MyCharacterControler myCharacterControler;
 
     
 

@@ -8,27 +8,27 @@ public class InventoryController : MonoBehaviour
 
     // item sturct
     [System.Serializable]
-    protected struct InventoryItem
+    private struct InventoryItem
     {
         public string name;
         public float weight;
     }
 
  
-    protected Dictionary<int, InventoryItem> inventory = new Dictionary<int, InventoryItem>();
+    private Dictionary<int, InventoryItem> inventory = new Dictionary<int, InventoryItem>();
 
     
-    [HideInInspector] public float weightTotal;
+    [HideInInspector] private float weightTotal;
 
     // Other 
     [SerializeField] GameObject Player;
-    protected MyCharacterControler myCharacterControler;
+    private Weight weightControler;
 
 
 
     private void Awake()
     {
-        myCharacterControler = Player.GetComponent<MyCharacterControler>();
+        weightControler = Player.GetComponent<Weight>();
         weightTotal = 0;
     }
 
@@ -51,13 +51,13 @@ public class InventoryController : MonoBehaviour
         temp.weight = weight;
         inventory.Add(order,temp);
         weightTotal += weight;
-        myCharacterControler.WeightModChange(weightTotal);
+        weightControler.WeightModChange(weightTotal);
     }
     public void RemoveItem(int order)
     {
         weightTotal -= inventory[order].weight;
         inventory.Remove(order);
-        myCharacterControler.WeightModChange(weightTotal);
+        weightControler.WeightModChange(weightTotal);
     }
 
 }

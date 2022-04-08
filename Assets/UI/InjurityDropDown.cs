@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class InjurityDropDown : MonoBehaviour
 {
-    [SerializeField] protected GameObject injCntrl;
-    [SerializeField] protected Dropdown injDropdown;
+    [SerializeField] private GameObject injCntrl;
+    [SerializeField] private Dropdown injDropdown;
 
-    protected InjurityController injurityController;
+    private InjurityController injurityController;
 
     private void Awake()
     {
