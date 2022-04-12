@@ -11,7 +11,7 @@ public class InjurityController : MonoBehaviour
     {
         public string name;
         public bool injurityStatus;
-        public int healthPoin;
+        public int healthPoint;
     }
 
     // Staff for import Limbs;
@@ -52,7 +52,7 @@ public class InjurityController : MonoBehaviour
     public void NewLimbStatus(string limbname, int hpChange, bool status )
     {
         Limb temp = limbs[limbname];
-        temp.healthPoin += hpChange;
+        temp.healthPoint += hpChange;
         temp.injurityStatus = status;
         limbs[limbname] = temp;
         

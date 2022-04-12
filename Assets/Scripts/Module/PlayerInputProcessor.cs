@@ -99,7 +99,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     Value = Vector2.right * inputHorizontal;
                     // Rotate character if he changed direction
                     if (inputHorizontal * direction.x < 0)
-                        characterController.Rotate();
+                        characterController.RotateCharacter(0,180,0);
                     direction.x = inputHorizontal > 0 ? 1 : -1;
                     if (Control.Player.RunButton.phase == InputActionPhase.Performed  )
                     {
@@ -131,6 +131,8 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     else
                         moveType = MoveType.Walk;
 
+                    if (Control.Player.RunButton.phase != InputActionPhase.Performed)
+                        runTimer = 0;
                     if (injurityController.InjurityCheck("Legs"))
                         moveType = MoveType.Crouch;
                 }
@@ -183,7 +185,6 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                         characterController.DashTimer = Time.time;
                         stand = 0;
                         Value = Vector2.right * inputHorizontal;
-                        Debug.Log(moveType);
                     }
             }
             else
@@ -237,12 +238,14 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
             if (characterController.IsGrounded())
             {
                     liftHeight = characterController.HeightOfObstecle();
+                    Debug.Log(moveType);
                     if (liftHeight != 0)
                     {
                         characterController.LiftDuration = (liftHeight + 0.5f) / liftSpeed;
                         characterController.LiftTimer = Time.time;
                         if (liftHeight < characterController.HeightOfCharacter)
                             moveType = MoveType.SoloLifting;
+
                     }   
             }
             else

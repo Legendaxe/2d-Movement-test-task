@@ -103,6 +103,7 @@ public class MyCharacterControler : MonoBehaviour
     public float HeightOfObstecle()
     {
         int bitMask = (1 << 7); // Ignoring all except the ground
+        Debug.Log("lol");
         RaycastHit2D hitted = Physics2D.Raycast(characterCollider2.bounds.center, transform.right, characterCollider2.bounds.extents.x +.05f, bitMask);
         if (hitted)
         {
@@ -167,17 +168,17 @@ public class MyCharacterControler : MonoBehaviour
         else
             return true;
     }
-    public void Rotate() => transform.Rotate(0, 180, 0);
+    public void RotateCharacter(float x, float y, float z) => transform.Rotate(x,y,z);
 
-   
+
 
     public void StandOrSit()
     {
         if (stand == 0)
-            animator.Play("Idle");
+            animator.Play("Stand");
         else
- 
-            animator.Play("Sitting");
+
+            animator.Play("Stand");
     }
 
     public void WalkOrCrawl(Vector2 inputHorizontal)
@@ -185,14 +186,14 @@ public class MyCharacterControler : MonoBehaviour
         if (stand == 0)
         {
             if (WallCheck(transform.right, 2.5f, 0f))
-                animator.Play("Walking");
-            else
-                animator.Play("Blocked move");
-            rb.velocity = new Vector2( inputHorizontal.x * walkSpeed, inputHorizontal.y);
+                animator.Play("Stand");
+            //else
+            //    animator.Play(4);
+            rb.velocity = new Vector2(inputHorizontal.x * walkSpeed, inputHorizontal.y);
         }
         else
         {
-            animator.Play("Down Crouching");
+            animator.Play("Stand");
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed, inputHorizontal.y);
         }
     }
@@ -200,15 +201,15 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (stand == 0)
         {
-            if (WallCheck(transform.right, 2.5f, 0f))
-                animator.Play("Crouching");
-            else
-                animator.Play("Blocked move");
+            //if (WallCheck(transform.right, 2.5f, 0f))
+            //    animator.Play(5);
+            //else
+            //    animator.Play(4);
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed, inputHorizontal.y);
         }
         else
         {
-            animator.Play("Down Crouching");
+            //animator.Play(1);
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed * 0.6f, inputHorizontal.y);
         }
     }
@@ -216,13 +217,13 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (WallCheck(transform.right, 3f, 0))
         {
-            animator.Play("Running");
-            rb.velocity = new Vector2(inputHorizontal.x * runSpeed *0.5f , inputHorizontal.y);
+            animator.Play("LiteRun");
+            rb.velocity = new Vector2(inputHorizontal.x * runSpeed * 0.5f, inputHorizontal.y);
         }
         else
         {
             stand = 0;
-            animator.Play("Blocked move");
+            //animator.Play(4);
         }
     }
     public void SecondRunStage(Vector2 inputHorizontal)
@@ -230,12 +231,12 @@ public class MyCharacterControler : MonoBehaviour
         if (WallCheck(transform.right, 3f, 0))
         {
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
-            animator.Play("Running");
+            animator.Play("LiteRun");
         }
         else
         {
             stand = 0;
-            animator.Play("Blocked move");
+            //animator.Play(4);
         }
     }
     public void ThirdRunStage(Vector2 inputHorizontal)
@@ -243,12 +244,12 @@ public class MyCharacterControler : MonoBehaviour
         if (WallCheck(transform.right, 3f, 0))
         {
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
-            animator.Play("Running");
+            animator.Play("HardRun");
         }
         else
         {
             stand = 0;
-            animator.Play("Blocked move");
+            //animator.Play(4);
         }
     }
     public void Dash(Vector2 inputHorizontal)
@@ -271,14 +272,13 @@ public class MyCharacterControler : MonoBehaviour
     }
     public void Fall()
     {
-        stand = 0; 
-        animator.Play("Jumping Fall");
+        stand = 0;
+        //animator.Play(3);
     }
 
     public void Grab(Vector2 inputHorizontal)
     {
-        animator.Play("Grabbing");
-        Debug.Log(inputHorizontal);
+        //animator.Play("Grabbing");
         rb.velocity = inputHorizontal * crouchSpeed;
         grabBody.velocity = inputHorizontal * crouchSpeed;
     }
@@ -295,7 +295,7 @@ public class MyCharacterControler : MonoBehaviour
                     liftDuration = characterCollider2.bounds.size.x / liftSpeed;
                     liftTimer = Time.time;
                     liftSecondStage = false;
-                    animator.Play("Down Crouching");
+                    //animator.Play(1);
                 }
                 else
                 {
@@ -312,7 +312,7 @@ public class MyCharacterControler : MonoBehaviour
         else
         {
             rb.isKinematic = true;
-            animator.Play("Climbing");
+            //animator.Play(2);
             liftFirstStage = true;
             liftSecondStage = true;
         }
@@ -327,10 +327,10 @@ public class MyCharacterControler : MonoBehaviour
                 if (liftSecondStage)
 
                 {
-                    liftDuration = (characterCollider2.bounds.size.x + 3f) / liftSpeed;
+                    liftDuration = (characterCollider2.bounds.extents.x + 3f) / liftSpeed;
                     liftTimer = Time.time;
                     liftSecondStage = false;
-                    animator.Play("Down Crouching");
+                    //animator.Play(1);
                 }
                 else
                 {
@@ -347,14 +347,14 @@ public class MyCharacterControler : MonoBehaviour
         else
         {
             rb.isKinematic = true;
-            animator.Play("Climbing");
+            //animator.Play(2);
             liftFirstStage = true;
             liftSecondStage = true;
         }
     }
     public void Lying()
     {
-        animator.Play("Liyng");
+        //animator.Play("Liyng");
     }
 
 }
