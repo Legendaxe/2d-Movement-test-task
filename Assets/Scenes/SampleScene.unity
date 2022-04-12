@@ -156,7 +156,7 @@ MonoBehaviour:
   - name: Legs
     injurityStatus: 0
     healthPoint: 150
-  Player: {fileID: 2106389164}
+  player: {fileID: 2106389164}
 --- !u!4 &59824841
 Transform:
   m_ObjectHideFlags: 0
@@ -4044,8 +4044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f210eeee09042bf4cb1d9f7a62b7bb39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 2106389174}
-  handler: {fileID: 2106389171}
+  player: {fileID: 2106389164}
   groundedPullMagnitude: 5
 --- !u!114 &2106389171
 MonoBehaviour:
@@ -4073,7 +4072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6a65baa8a9edc34d96049c1fe868312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 2106389164}
+  player: {fileID: 2106389164}
   weightLimit:
   - limit: 30
     modifier: 1
@@ -4093,10 +4092,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81a2faa710fbf0e40abd4a47ef287264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 2106389174}
+  player: {fileID: 2106389164}
   injurityController: {fileID: 59824840}
-  enduranceController: {fileID: 2106389169}
-  handler: {fileID: 2106389171}
 --- !u!114 &2106389174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4125,6 +4122,8 @@ MonoBehaviour:
   LieAnimation: Stand
   FallAnimation: Stand
   GrabAnimation: Stand
+  BlockAnimation: Stand
+  ClimbAnimation: Stand
   animator: {fileID: 2106389167}
 --- !u!50 &2106389175
 Rigidbody2D:

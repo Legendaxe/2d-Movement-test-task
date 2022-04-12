@@ -13,7 +13,7 @@ public class Weight : MonoBehaviour, IMovementModifier
     }
 
     [Header("References")]
-    [SerializeField] GameObject Player;
+    [SerializeField] GameObject player;
 
     [Header("Settings")]
     [SerializeField] private WeightLimit[] weightLimit = new WeightLimit[3];
@@ -26,7 +26,7 @@ public class Weight : MonoBehaviour, IMovementModifier
 
     private void Awake()
     {
-        handler = Player.GetComponent<MoveHandler>();
+        handler = player.GetComponent<MoveHandler>();
     }
 
     private void Start()

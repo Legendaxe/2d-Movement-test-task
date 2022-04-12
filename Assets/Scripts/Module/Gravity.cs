@@ -5,8 +5,9 @@ using UnityEngine;
 public class Gravity : MonoBehaviour, IMovementModifier
 {
     [Header("References")]
-    [SerializeField] MyCharacterControler characterController;
-    [SerializeField] MoveHandler handler;
+    [SerializeField] GameObject player;
+    private MyCharacterControler characterController;
+    private MoveHandler handler;
 
     [Header("Settings")]
     [SerializeField] private float groundedPullMagnitude;
@@ -25,6 +26,8 @@ public class Gravity : MonoBehaviour, IMovementModifier
 
     private void Awake()
     {
+        characterController = player.GetComponent<MyCharacterControler>();
+        handler = player.GetComponent<MoveHandler>();
         gravityMagnitude = Physics2D.gravity.y;
     }
 

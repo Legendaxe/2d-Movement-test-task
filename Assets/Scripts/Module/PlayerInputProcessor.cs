@@ -8,10 +8,11 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
 {
 
     [Header("References")]
-    [SerializeField] MyCharacterControler characterController;
-    [SerializeField] InjurityController injurityController;
-    [SerializeField] Endurance enduranceController;
-    [SerializeField] MoveHandler handler;
+    [SerializeField] private GameObject player;
+    [SerializeField] private InjurityController injurityController;
+    private MyCharacterControler characterController;
+    private Endurance enduranceController;
+    private MoveHandler handler;
 
 
 
@@ -42,8 +43,14 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     public float RunTimer { set { runTimer = value; } }
 
 
-    private void Awake() => Control = new InputControl();
+    private void Awake()
+    {
+        Control = new InputControl();
+        characterController = player.GetComponent<MyCharacterControler>();
+        enduranceController= player.GetComponent<Endurance>();
+        handler = player.GetComponent<MoveHandler>();
 
+    }
 
     private void OnEnable()
     {

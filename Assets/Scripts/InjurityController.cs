@@ -20,14 +20,14 @@ public class InjurityController : MonoBehaviour
 
 
     // Other 
-    [SerializeField] GameObject Player;
+    [SerializeField] GameObject player;
     private MyCharacterControler myCharacterControler;
 
     
 
     private void Awake()
     {
-        myCharacterControler = Player.GetComponent<MyCharacterControler>();
+        myCharacterControler = player.GetComponent<MyCharacterControler>();
         FullHeal();
     }
 
