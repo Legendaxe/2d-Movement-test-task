@@ -12,15 +12,22 @@ public class Weight : MonoBehaviour, IMovementModifier
         public float modifier;
     }
 
+    [Header("References")]
+    [SerializeField] GameObject Player;
 
     [Header("Settings")]
     [SerializeField] private WeightLimit[] weightLimit = new WeightLimit[3];
+
+    private MoveHandler handler;
 
 
 
     public Vector2 Value { get; private set; }
 
-
+    private void Awake()
+    {
+        handler = Player.GetComponent<MoveHandler>();
+    }
 
     private void Start()
     {
@@ -32,18 +39,17 @@ public class Weight : MonoBehaviour, IMovementModifier
     public void WeightModChange(float weight)
     {
         if (weight > weightLimit[weightLimit.Length - 1].limit)
-        {
             Value = Vector2.one * weightLimit[weightLimit.Length - 1].modifier;
-            return;
-        }
-        foreach (var item in weightLimit)
-        {
-            if (weight < item.limit)
+        else
+            foreach (var item in weightLimit)
             {
-                Value = Vector2.one * item.modifier;
-                break;
-            }
+                if (weight < item.limit)
+                {
+                    Value = Vector2.one * item.modifier;
+                    handler.AddMultiplyModifier(this);
+                    break;
+                }
 
-        }
+            }
     }
 }

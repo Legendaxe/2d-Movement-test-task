@@ -12,6 +12,18 @@ public class MyCharacterControler : MonoBehaviour
     [SerializeField] private float dashDuration;
     [SerializeField] private float liftSpeed;
     [SerializeField] private float crouchSpeed;
+    [Header("Movement Animations")]
+    [SerializeField] private string StandAnimation = "Stand";
+    [SerializeField] private string LiteRunAnimation = "Stand";
+    [SerializeField] private string HardRunAnimation = "Stand";
+    [SerializeField] private string CrouchAnimation = "Stand";
+    [SerializeField] private string DownCrouchAnimation = "Stand";
+    [SerializeField] private string DashAnimation = "Stand";
+    [SerializeField] private string SitAnimation = "Stand";
+    [SerializeField] private string LieAnimation = "Stand";
+    [SerializeField] private string FallAnimation = "Stand";
+    [SerializeField] private string GrabAnimation = "Stand";
+
 
     private int stand; // 0 - Stand, 1 - Sit, 2 - Lie
 
@@ -175,25 +187,25 @@ public class MyCharacterControler : MonoBehaviour
     public void StandOrSit()
     {
         if (stand == 0)
-            animator.Play("Stand");
+            animator.Play(StandAnimation);
         else
 
-            animator.Play("Stand");
+            animator.Play(SitAnimation);
     }
 
     public void WalkOrCrawl(Vector2 inputHorizontal)
     {
         if (stand == 0)
         {
-            if (WallCheck(transform.right, 2.5f, 0f))
-                animator.Play("Stand");
+            //if (WallCheck(transform.right, 2.5f, 0f))
+                animator.Play(StandAnimation);
             //else
-            //    animator.Play(4);
+            //    animator.Play(BlockAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * walkSpeed, inputHorizontal.y);
         }
         else
         {
-            animator.Play("Stand");
+            animator.Play(DownCrouchAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed, inputHorizontal.y);
         }
     }
@@ -202,59 +214,57 @@ public class MyCharacterControler : MonoBehaviour
         if (stand == 0)
         {
             //if (WallCheck(transform.right, 2.5f, 0f))
-            //    animator.Play(5);
+            animator.Play(CrouchAnimation);
             //else
-            //    animator.Play(4);
+            //    animator.Play(BlockAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed, inputHorizontal.y);
         }
         else
         {
-            //animator.Play(1);
+            animator.Play(DownCrouchAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed * 0.6f, inputHorizontal.y);
         }
     }
     public void FirstRunStage(Vector2 inputHorizontal)
     {
-        if (WallCheck(transform.right, 3f, 0))
-        {
-            animator.Play("LiteRun");
+        //if (WallCheck(transform.right, 3f, 0))
+        //{
+            animator.Play(LiteRunAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed * 0.5f, inputHorizontal.y);
-        }
-        else
-        {
-            stand = 0;
-            //animator.Play(4);
-        }
+        //}
+        //else
+        //{
+        //    stand = 0;
+        //    //animator.Play(BlockAnimation);
+        //}
     }
     public void SecondRunStage(Vector2 inputHorizontal)
     {
-        if (WallCheck(transform.right, 3f, 0))
-        {
+        //if (WallCheck(transform.right, 3f, 0))
+        //{
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
-            animator.Play("LiteRun");
-        }
-        else
-        {
-            stand = 0;
-            //animator.Play(4);
-        }
+            animator.Play(LiteRunAnimation);
+        //}
+        //else
+        //{
+        //    //animator.Play(BlockAnimation);
+        //}
     }
     public void ThirdRunStage(Vector2 inputHorizontal)
     {
-        if (WallCheck(transform.right, 3f, 0))
-        {
+        //if (WallCheck(transform.right, 3f, 0))
+        //{
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
-            animator.Play("HardRun");
-        }
-        else
-        {
-            stand = 0;
-            //animator.Play(4);
-        }
+            animator.Play(HardRunAnimation);
+        //}
+        //else
+        //{
+        //    //animator.Play(BlockAnimation);
+        //}
     }
     public void Dash(Vector2 inputHorizontal)
     {
-        animator.Play("Dash");
+        animator.Play(DashAnimation);
         if (dashStatus)
         {
             if (Time.time - dashTimer > dashDuration)
@@ -273,12 +283,12 @@ public class MyCharacterControler : MonoBehaviour
     public void Fall()
     {
         stand = 0;
-        //animator.Play(3);
+        animator.Play(FallAnimation);
     }
 
     public void Grab(Vector2 inputHorizontal)
     {
-        //animator.Play("Grabbing");
+        animator.Play(GrabAnimation);
         rb.velocity = inputHorizontal * crouchSpeed;
         grabBody.velocity = inputHorizontal * crouchSpeed;
     }
@@ -354,7 +364,7 @@ public class MyCharacterControler : MonoBehaviour
     }
     public void Lying()
     {
-        //animator.Play("Liyng");
+        animator.Play(LieAnimation);
     }
 
 }

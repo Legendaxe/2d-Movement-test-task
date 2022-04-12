@@ -4073,6 +4073,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6a65baa8a9edc34d96049c1fe868312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player: {fileID: 2106389164}
   weightLimit:
   - limit: 30
     modifier: 1
@@ -4114,6 +4115,16 @@ MonoBehaviour:
   dashDuration: 0.83
   liftSpeed: 6
   crouchSpeed: 5
+  StandAnimation: Stand
+  LiteRunAnimation: LiteRun
+  HardRunAnimation: HardRun
+  CrouchAnimation: Stand
+  DownCrouchAnimation: Stand
+  DashAnimation: Dash
+  SitAnimation: Stand
+  LieAnimation: Stand
+  FallAnimation: Stand
+  GrabAnimation: Stand
   animator: {fileID: 2106389167}
 --- !u!50 &2106389175
 Rigidbody2D:

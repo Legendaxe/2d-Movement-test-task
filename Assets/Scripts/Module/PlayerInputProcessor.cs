@@ -50,14 +50,14 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
         Control.Player.Enable();
         Control.Player.DoubleTapLeftDash.performed += DoubleTapLeftDash_performed;
         Control.Player.DoubleTapRightDash.performed += DoubleTapRightDash_performed;
-        handler.AddModifier(this);
+        handler.AddAddModifier(this);
     }
 
     
     private void OnDisable()
     {
         Control.Player.Disable();
-        handler.RemoveModifier(this);
+        handler.RemoveAddModifier(this);
     }
 
 
@@ -238,7 +238,6 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
             if (characterController.IsGrounded())
             {
                     liftHeight = characterController.HeightOfObstecle();
-                    Debug.Log(moveType);
                     if (liftHeight != 0)
                     {
                         characterController.LiftDuration = (liftHeight + 0.5f) / liftSpeed;

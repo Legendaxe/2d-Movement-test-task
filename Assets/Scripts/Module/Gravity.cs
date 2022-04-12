@@ -19,8 +19,8 @@ public class Gravity : MonoBehaviour, IMovementModifier
 
     public Vector2 Value { get; private set; }
 
-    private void OnEnable() => handler.AddModifier(this);
-    private void OnDisable() => handler.RemoveModifier(this);
+    private void OnEnable() => handler.AddAddModifier(this);
+    private void OnDisable() => handler.RemoveAddModifier(this);
 
 
     private void Awake()

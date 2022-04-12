@@ -10,10 +10,13 @@ public class MoveHandler : MonoBehaviour
     [SerializeField] private Weight weight;
 
 
-    private readonly List<IMovementModifier> MovementModifiers = new List<IMovementModifier>();
+    private readonly List<IMovementModifier> MovementAddModifiers = new List<IMovementModifier>();
+    private readonly List<IMovementModifier> MovementMultiplyModifiers = new List<IMovementModifier>();
 
-    public void AddModifier(IMovementModifier modifier) => MovementModifiers.Add(modifier);
-    public void RemoveModifier(IMovementModifier modifier) => MovementModifiers.Remove(modifier);
+    public void AddAddModifier(IMovementModifier modifier) => MovementAddModifiers.Add(modifier);
+    public void RemoveAddModifier(IMovementModifier modifier) => MovementAddModifiers.Remove(modifier);
+    public void AddMultiplyModifier(IMovementModifier modifier) => MovementMultiplyModifiers.Add(modifier);
+    public void RemoveMultiplyModifier(IMovementModifier modifier) => MovementMultiplyModifiers.Remove(modifier);
 
 
     private MoveType moveType;
@@ -31,12 +34,17 @@ public class MoveHandler : MonoBehaviour
         moveType = characterControler.Movetype;
         stand = characterControler.Stand;
         Vector2 movement = Vector2.zero;
-        foreach(IMovementModifier modifier in MovementModifiers)
+        foreach(IMovementModifier modifier in MovementAddModifiers)
         {
             movement += modifier.Value;
             
         }
-        DoAction( movement * weight.Value);
+        foreach (IMovementModifier modifier in MovementMultiplyModifiers)
+        {
+            movement *= modifier.Value;
+
+        }
+        DoAction( movement);
 
     }
     public void DoAction(Vector2 inputHorizontal)
