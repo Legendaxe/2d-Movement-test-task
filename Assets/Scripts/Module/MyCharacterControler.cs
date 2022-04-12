@@ -23,6 +23,8 @@ public class MyCharacterControler : MonoBehaviour
     [SerializeField] private string LieAnimation = "Stand";
     [SerializeField] private string FallAnimation = "Stand";
     [SerializeField] private string GrabAnimation = "Stand";
+    [SerializeField] private string BlockAnimation = "Stand";
+    [SerializeField] private string ClimbAnimation = "Stand";
 
 
     private int stand; // 0 - Stand, 1 - Sit, 2 - Lie
@@ -115,7 +117,6 @@ public class MyCharacterControler : MonoBehaviour
     public float HeightOfObstecle()
     {
         int bitMask = (1 << 7); // Ignoring all except the ground
-        Debug.Log("lol");
         RaycastHit2D hitted = Physics2D.Raycast(characterCollider2.bounds.center, transform.right, characterCollider2.bounds.extents.x +.05f, bitMask);
         if (hitted)
         {
@@ -197,10 +198,10 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (stand == 0)
         {
-            //if (WallCheck(transform.right, 2.5f, 0f))
+            if (WallCheck(transform.right, 2.5f, 0f))
                 animator.Play(StandAnimation);
-            //else
-            //    animator.Play(BlockAnimation);
+            else
+                animator.Play(BlockAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * walkSpeed, inputHorizontal.y);
         }
         else
@@ -213,10 +214,10 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (stand == 0)
         {
-            //if (WallCheck(transform.right, 2.5f, 0f))
-            animator.Play(CrouchAnimation);
-            //else
-            //    animator.Play(BlockAnimation);
+            if (WallCheck(transform.right, 2.5f, 0f))
+                animator.Play(CrouchAnimation);
+            else
+                animator.Play(BlockAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * crouchSpeed, inputHorizontal.y);
         }
         else
@@ -227,40 +228,40 @@ public class MyCharacterControler : MonoBehaviour
     }
     public void FirstRunStage(Vector2 inputHorizontal)
     {
-        //if (WallCheck(transform.right, 3f, 0))
-        //{
+        if (WallCheck(transform.right, 3f, 0))
+        {
             animator.Play(LiteRunAnimation);
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed * 0.5f, inputHorizontal.y);
-        //}
-        //else
-        //{
-        //    stand = 0;
-        //    //animator.Play(BlockAnimation);
-        //}
+        }
+        else
+        {
+            stand = 0;
+            animator.Play(BlockAnimation);
+        }
     }
     public void SecondRunStage(Vector2 inputHorizontal)
     {
-        //if (WallCheck(transform.right, 3f, 0))
-        //{
+        if (WallCheck(transform.right, 3f, 0))
+        {
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
             animator.Play(LiteRunAnimation);
-        //}
-        //else
-        //{
-        //    //animator.Play(BlockAnimation);
-        //}
+        }
+        else
+        {
+            animator.Play(BlockAnimation);
+        }
     }
     public void ThirdRunStage(Vector2 inputHorizontal)
     {
-        //if (WallCheck(transform.right, 3f, 0))
-        //{
+        if (WallCheck(transform.right, 3f, 0))
+        {
             rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
             animator.Play(HardRunAnimation);
-        //}
-        //else
-        //{
-        //    //animator.Play(BlockAnimation);
-        //}
+        }
+        else
+        {
+            animator.Play(BlockAnimation);
+        }
     }
     public void Dash(Vector2 inputHorizontal)
     {
@@ -305,7 +306,6 @@ public class MyCharacterControler : MonoBehaviour
                     liftDuration = characterCollider2.bounds.size.x / liftSpeed;
                     liftTimer = Time.time;
                     liftSecondStage = false;
-                    //animator.Play(1);
                 }
                 else
                 {
@@ -322,7 +322,7 @@ public class MyCharacterControler : MonoBehaviour
         else
         {
             rb.isKinematic = true;
-            //animator.Play(2);
+            animator.Play(ClimbAnimation);
             liftFirstStage = true;
             liftSecondStage = true;
         }
@@ -340,7 +340,6 @@ public class MyCharacterControler : MonoBehaviour
                     liftDuration = (characterCollider2.bounds.extents.x + 3f) / liftSpeed;
                     liftTimer = Time.time;
                     liftSecondStage = false;
-                    //animator.Play(1);
                 }
                 else
                 {
@@ -357,7 +356,7 @@ public class MyCharacterControler : MonoBehaviour
         else
         {
             rb.isKinematic = true;
-            //animator.Play(2);
+            animator.Play(ClimbAnimation);
             liftFirstStage = true;
             liftSecondStage = true;
         }
