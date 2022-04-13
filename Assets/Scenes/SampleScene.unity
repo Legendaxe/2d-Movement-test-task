@@ -4107,9 +4107,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 10
-  runSpeed: 15
+  runSpeed: 25
+  runAccelorationTime: 5
   dashSpeed: 20
-  dashDuration: 0.83
+  dashDuration: 1
   liftSpeed: 6
   crouchSpeed: 5
   StandAnimation: Stand
@@ -4176,11 +4177,35 @@ MonoBehaviour:
     m_ActionId: bc74ffe7-2d02-4d41-a8d4-0e78bee04176
     m_ActionName: Player/InputHorizontal[/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2106389173}
+        m_TargetAssemblyTypeName: PlayerInputProcessor, Assembly-CSharp
+        m_MethodName: DoubleTapLeftDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 19495e69-3161-4508-a3ad-e8a3b25b07d5
     m_ActionName: Player/DoubleTapLeftDash[/Keyboard/a]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2106389173}
+        m_TargetAssemblyTypeName: PlayerInputProcessor, Assembly-CSharp
+        m_MethodName: DoubleTapRightDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e8d2c910-b3f0-43cb-a3a6-eea6cb254808
     m_ActionName: Player/DoubleTapRightDash[/Keyboard/d]
   - m_PersistentCalls:

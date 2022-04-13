@@ -75,7 +75,7 @@ public class MoveHandler : MonoBehaviour
                     }
                 case MoveType.Steady: // Second run stage
                     {
-                        characterControler.SecondRunStage(inputHorizontal);
+                        characterControler.FirstRunStage(inputHorizontal);
                         break;
                     }
                 case MoveType.GO: // Third run stage
@@ -85,7 +85,7 @@ public class MoveHandler : MonoBehaviour
                     }
                 case MoveType.Dash: // Dash
                     {
-                        characterControler.Dash(inputHorizontal);
+                        characterControler.Dash(inputHorizontal.normalized);
                         break;
                     }
                 case MoveType.Fall: // Fall

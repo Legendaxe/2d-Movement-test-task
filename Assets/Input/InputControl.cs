@@ -32,7 +32,7 @@ public class @InputControl : IInputActionCollection, IDisposable
                     ""id"": ""19495e69-3161-4508-a3ad-e8a3b25b07d5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap""
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""DoubleTapRightDash"",
@@ -40,7 +40,7 @@ public class @InputControl : IInputActionCollection, IDisposable
                     ""id"": ""e8d2c910-b3f0-43cb-a3a6-eea6cb254808"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap""
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""capsLock"",

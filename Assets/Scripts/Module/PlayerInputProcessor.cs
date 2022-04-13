@@ -19,7 +19,13 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     // Movement staff
     private Vector2 direction;
     private int stand;
-    private float runTimer;
+    private bool dashStatus;
+    private float runCurrentSpeed;
+    private float runMaxSpeed;
+    private float runAccelorationTime;
+    private float runAcceloration;
+
+    private float runDashBoost = 1;
     private MoveType moveType;
 
 
@@ -34,13 +40,17 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     // Input staff
     private bool capsLock;
     private float inputHorizontal;
-    private float acceloratopn = 0.05f;
+    private float LeftDashTimer;
+    private float RightDashTimer;
+    private float inputAcceloration = .05f;
+
     private InputControl Control;
 
 
 
     public Vector2 Value { get; private set; }
-    public float RunTimer { set { runTimer = value; } }
+    public float RunTimer { set { runCurrentSpeed = value; } }
+    public float RunTimerModify { get { return runDashBoost; }  set { runDashBoost = value; } }
 
 
     private void Awake()
@@ -55,8 +65,6 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     private void OnEnable()
     {
         Control.Player.Enable();
-        Control.Player.DoubleTapLeftDash.performed += DoubleTapLeftDash_performed;
-        Control.Player.DoubleTapRightDash.performed += DoubleTapRightDash_performed;
         handler.AddAddModifier(this);
     }
 
@@ -71,8 +79,18 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     private void Start()
     {
         liftSpeed = characterController.LiftSpeed;
+
         moveType = MoveType.Idle;
         direction = Vector2.right;
+        
+        LeftDashTimer = 0;
+        RightDashTimer = 0;
+
+        runAccelorationTime = characterController.RunAccelorationTime;
+        runMaxSpeed = characterController.RunMaxSpeed;
+        runAcceloration = runMaxSpeed / runAccelorationTime;
+        runCurrentSpeed = runMaxSpeed * 0.6f;
+
         capsLock = false;
     }
 
@@ -81,156 +99,167 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     {
 
 
-        inputHorizontal = Mathf.MoveTowards(inputHorizontal, Control.Player.InputHorizontal.ReadValue<float>(), acceloratopn);
+        inputHorizontal = Mathf.MoveTowards(inputHorizontal, Control.Player.InputHorizontal.ReadValue<float>(), inputAcceloration);
         InputHorizontal(inputHorizontal);
     }
 
 
 
 
-    public void Capslock()
-    {
-        capsLock = !capsLock;
-    }
-    
+    public void Capslock() => capsLock = !capsLock;
 
+
+    private bool InputPossibility()
+    {
+        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        {
+            if (characterController.IsGrounded())
+            {
+                return true;
+            }
+            else
+                moveType = MoveType.Fall;
+        }
+        return false;
+    }
     public void InputHorizontal(float inputHorizontal )
     {
         moveType = characterController.Movetype;
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        if (InputPossibility())
         {
-            if (characterController.IsGrounded())
+            if (inputHorizontal != 0)
             {
-                if (inputHorizontal != 0)
+                Value = Vector2.right * inputHorizontal;
+                // Rotate character if he changed direction
+                if (inputHorizontal * direction.x < 0)
+                    characterController.RotateCharacter(0, 180, 0);
+                direction.x = inputHorizontal > 0 ? 1 : -1;
+                if (Control.Player.RunButton.phase == InputActionPhase.Performed)
                 {
-                    Value = Vector2.right * inputHorizontal;
-                    // Rotate character if he changed direction
-                    if (inputHorizontal * direction.x < 0)
-                        characterController.RotateCharacter(0,180,0);
-                    direction.x = inputHorizontal > 0 ? 1 : -1;
-                    if (Control.Player.RunButton.phase == InputActionPhase.Performed  )
+                    if (enduranceController.CurrentEndurance > 5)
                     {
-                        if (enduranceController.CurrentEndurance > 5)
+                        if (runCurrentSpeed < runMaxSpeed * 0.8f)
                         {
-                            if (runTimer == 0)
-                            {
-                                moveType = MoveType.Ready;
-                                stand = 0;
-                            }
-                            else if (runTimer < 2)
-                                moveType = MoveType.Steady;
-                            else
-                                moveType = MoveType.GO;
-                            runTimer += Time.deltaTime;
+                            moveType = MoveType.Ready;
+                            runCurrentSpeed += Time.deltaTime * runAcceloration*runDashBoost;
+                            stand = 0;
                         }
-                    }
-                    else if (Control.Player.ObstecleInteractionKey.phase == InputActionPhase.Performed)
-                    {
-                        if (characterController.WallCheck(direction, 3f, -characterController.HalfOfCharacterHeight) && characterController.GrabCheck())
-                            moveType = MoveType.Grab;
+                        else if (runCurrentSpeed < runMaxSpeed)
+                        {
+                            moveType = MoveType.Steady;
+                            runCurrentSpeed += Time.deltaTime * runAcceloration*runDashBoost;
+                        }
                         else
-                            moveType = MoveType.Walk;
+                        {
+                            runDashBoost = 1;
+                            moveType = MoveType.GO;
+                        }
+                        Value = new Vector2(runCurrentSpeed,0);
                     }
-                    // Crouch
-                    else if (capsLock)
-                        moveType = MoveType.Crouch;
-                    // Walk
+                }
+                else if (Control.Player.ObstecleInteractionKey.phase == InputActionPhase.Performed)
+                {
+                    if (characterController.WallCheck(direction, 3f, -characterController.HalfOfCharacterHeight) && characterController.GrabCheck())
+                        moveType = MoveType.Grab;
                     else
                         moveType = MoveType.Walk;
-
-                    if (Control.Player.RunButton.phase != InputActionPhase.Performed)
-                        runTimer = 0;
-                    if (injurityController.InjurityCheck("Legs"))
-                        moveType = MoveType.Crouch;
                 }
+                // Crouch
+                else if (capsLock)
+                    moveType = MoveType.Crouch;
+                // Walk
                 else
-                    moveType = MoveType.Idle;
+                    moveType = MoveType.Walk;
+
+                if (Control.Player.RunButton.phase != InputActionPhase.Performed)
+                    runCurrentSpeed = runMaxSpeed * 0.6f;
+                if (injurityController.InjurityCheck("Legs"))
+                    moveType = MoveType.Crouch;
             }
             else
-                moveType = MoveType.Fall;
+            {
+                moveType = MoveType.Idle;
+                runCurrentSpeed = runMaxSpeed * 0.6f;
+            }
         }
         characterController.Movetype = moveType;
         characterController.Stand = stand;
     }
 
 
-    private void DoubleTapRightDash_performed(InputAction.CallbackContext obj)
+    public void DoubleTapRightDash(InputAction.CallbackContext obj)
     {
-        moveType = characterController.Movetype;
-
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        if (obj.canceled)
         {
-            if (characterController.IsGrounded())
-            {
-                if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x > 0))
-                    if (enduranceController.CurrentEndurance > 30)
-                    {
-                        moveType = MoveType.Dash;
-                        characterController.DashTimer = Time.time;
-                        stand = 0;
-                    }
-            }
-            else
-                moveType = MoveType.Fall;
+            RightDashTimer = Time.time;
         }
-        characterController.Movetype = moveType;
-        characterController.Stand = stand;
-
-    }
-
-    private void DoubleTapLeftDash_performed(InputAction.CallbackContext obj)
-    {
-        moveType = characterController.Movetype;
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        else if (obj.performed)
         {
-            if (characterController.IsGrounded())
+            if (Time.time - RightDashTimer < 0.2f)
             {
-                if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x < 0))
-                    if (enduranceController.CurrentEndurance > 30)
+                moveType = characterController.Movetype;
+                if (InputPossibility())
+                {
+                    if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x > 0))
                     {
                         moveType = MoveType.Dash;
                         characterController.DashTimer = Time.time;
+                        runDashBoost = 1.5f;
                         stand = 0;
                         Value = Vector2.right * inputHorizontal;
                     }
+                }
+                characterController.Movetype = moveType;
+                characterController.Stand = stand;
             }
-            else
-                moveType = MoveType.Fall;
         }
-        characterController.Movetype = moveType;
-        characterController.Stand = stand;
+
+    }
+
+    public void DoubleTapLeftDash(InputAction.CallbackContext obj)
+    {
+        if (obj.canceled)
+        {
+            LeftDashTimer = Time.time;
+        }
+        else if (obj.performed)
+        {
+            if (Time.time - LeftDashTimer < 0.2f)
+            {
+                moveType = characterController.Movetype;
+                if (InputPossibility())
+                {
+                    if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x < 0))
+                    {
+                        moveType = MoveType.Dash;
+                        characterController.DashTimer = Time.time;
+                        runDashBoost = 1.5f;
+                        stand = 0;
+                        Value = Vector2.right * inputHorizontal;
+                    }
+                }
+                characterController.Movetype = moveType;
+                characterController.Stand = stand;
+            }
+        }
     }
 
 
     public void KeySit()
     {
         moveType = characterController.Movetype;
-
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
-        {
-            if (characterController.IsGrounded())
-            {
-                stand = stand == 1 ? (characterController.WallCheck(transform.up, 3f, characterController.HalfOfCharacterHeight) ? 0 : 1) : 1;
-            }
-            else
-                moveType = MoveType.Fall;
-        }
+        if (InputPossibility())
+            stand = stand == 1 ? (characterController.WallCheck(transform.up, 3f, characterController.HalfOfCharacterHeight) ? 0 : 1) : 1;
         characterController.Movetype = moveType;
         characterController.Stand = stand;
     }
     public void KeyLie()
     {
         moveType = characterController.Movetype;
-
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        if (InputPossibility())
         {
-            if (characterController.IsGrounded())
-            {
-                stand = stand == 2 ? 0 : ((characterController.WallCheck(transform.right, 3f, -characterController.HalfOfCharacterHeight)
-                && characterController.WallCheck(-transform.right, 3f, -characterController.HalfOfCharacterHeight)) ? 2 : 0);
-            }
-            else
-                moveType = MoveType.Fall;
+            stand = stand == 2 ? 0 : ((characterController.WallCheck(transform.right, 3f, -characterController.HalfOfCharacterHeight)
+            && characterController.WallCheck(-transform.right, 3f, -characterController.HalfOfCharacterHeight)) ? 2 : 0);
         }
         characterController.Movetype = moveType;
         characterController.Stand = stand;
@@ -240,22 +269,17 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     {
         moveType = characterController.Movetype;
 
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump) && (moveType != MoveType.Grab))
+        if ((InputPossibility()) && (moveType != MoveType.Grab))
         {
-            if (characterController.IsGrounded())
+            liftHeight = characterController.HeightOfObstecle();
+            if (liftHeight != 0)
             {
-                    liftHeight = characterController.HeightOfObstecle();
-                    if (liftHeight != 0)
-                    {
-                        characterController.LiftDuration = (liftHeight + 0.5f) / liftSpeed;
-                        characterController.LiftTimer = Time.time;
-                        if (liftHeight < characterController.HeightOfCharacter)
-                            moveType = MoveType.SoloLifting;
+                characterController.LiftDuration = (liftHeight + 0.5f) / liftSpeed;
+                characterController.LiftTimer = Time.time;
+                if (liftHeight < characterController.HeightOfCharacter)
+                    moveType = MoveType.SoloLifting;
 
-                    }   
-            }
-            else
-                moveType = MoveType.Fall;
+            }   
         }
         characterController.Movetype = moveType;
         characterController.Stand = stand;
@@ -263,21 +287,14 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     public void KeyOverJump()
     {
         moveType = characterController.Movetype;
-
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        if (InputPossibility())
         {
-            if (characterController.IsGrounded())
+            if (characterController.OverJumpCheck())
             {
-                
-                if (characterController.OverJumpCheck())
-                {
-                    characterController.LiftDuration = characterController.HeightOfObstecle() / liftSpeed;
-                    characterController.LiftTimer = Time.time;
-                    moveType = MoveType.OverJump;
-                }
+                characterController.LiftDuration = characterController.HeightOfObstecle() / liftSpeed;
+                characterController.LiftTimer = Time.time;
+                moveType = MoveType.OverJump;
             }
-            else
-                moveType = MoveType.Fall;
         }
         characterController.Movetype = moveType;
         characterController.Stand = stand;

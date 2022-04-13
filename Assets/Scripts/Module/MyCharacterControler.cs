@@ -8,6 +8,7 @@ public class MyCharacterControler : MonoBehaviour
     [Header("Movement settings")]
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
+    [SerializeField] private float runAccelorationTime;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashDuration;
     [SerializeField] private float liftSpeed;
@@ -70,6 +71,7 @@ public class MyCharacterControler : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D characterCollider2;
     private Rigidbody2D grabBody;
+    private PlayerInputProcessor playerInput;
 
 
     private float direction;
@@ -85,6 +87,7 @@ public class MyCharacterControler : MonoBehaviour
        
         rb = transform.GetComponent<Rigidbody2D>(); 
         characterCollider2 = transform.GetComponent<BoxCollider2D>();
+        playerInput = transform.GetComponent<PlayerInputProcessor>();
 
         
 
@@ -107,6 +110,8 @@ public class MyCharacterControler : MonoBehaviour
     public  MoveType Movetype { get { return movetype; } set { movetype = value; } }
     public int Stand { get { return stand; } set { stand = value; } }
     public float LiftSpeed { get { return liftSpeed; } }
+    public float RunAccelorationTime { get { return runAccelorationTime; } }
+    public float RunMaxSpeed { get { return runSpeed; } }
     public float LiftTimer { set { liftTimer = value; } }
     public float LiftDuration { set { liftDuration = value; } }
     public float DashTimer { set { dashTimer = value; } }
@@ -231,7 +236,7 @@ public class MyCharacterControler : MonoBehaviour
         if (WallCheck(transform.right, 3f, 0))
         {
             animator.Play(LiteRunAnimation);
-            rb.velocity = new Vector2(inputHorizontal.x * runSpeed * 0.5f, inputHorizontal.y);
+            rb.velocity = inputHorizontal * transform.right; // new Vector2(inputHorizontal.x /** runSpeed * 0.7f*/, inputHorizontal.y);
         }
         else
         {
@@ -243,7 +248,7 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (WallCheck(transform.right, 3f, 0))
         {
-            rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
+            rb.velocity = inputHorizontal * transform.right; //new Vector2(inputHorizontal.x /** runSpeed * 0.8f*/, inputHorizontal.y);
             animator.Play(LiteRunAnimation);
         }
         else
@@ -255,7 +260,7 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (WallCheck(transform.right, 3f, 0))
         {
-            rb.velocity = new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
+            rb.velocity = inputHorizontal * transform.right;  //new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
             animator.Play(HardRunAnimation);
         }
         else
@@ -263,22 +268,25 @@ public class MyCharacterControler : MonoBehaviour
             animator.Play(BlockAnimation);
         }
     }
+
+
+
     public void Dash(Vector2 inputHorizontal)
     {
-        animator.Play(DashAnimation);
         if (dashStatus)
         {
             if (Time.time - dashTimer > dashDuration)
             {
-                movetype = MoveType.Idle;
-                rb.velocity = new Vector2(0, rb.velocity.y);
                 dashStatus = false;
+                movetype = MoveType.Steady;
             }
+            else
+                rb.velocity = new Vector2(transform.right.x * runSpeed * 0.7f, inputHorizontal.y);
         }
         else
         {
-            rb.velocity = new Vector2((inputHorizontal.x > 0 ? 1 : -1) * dashSpeed, rb.velocity.y);
             dashStatus = true;
+            animator.Play(DashAnimation);
         }
     }
     public void Fall()
@@ -323,6 +331,7 @@ public class MyCharacterControler : MonoBehaviour
         {
             rb.isKinematic = true;
             animator.Play(ClimbAnimation);
+            rb.velocity = Vector2.zero;
             liftFirstStage = true;
             liftSecondStage = true;
         }
@@ -357,6 +366,7 @@ public class MyCharacterControler : MonoBehaviour
         {
             rb.isKinematic = true;
             animator.Play(ClimbAnimation);
+            rb.velocity = Vector2.zero;
             liftFirstStage = true;
             liftSecondStage = true;
         }
