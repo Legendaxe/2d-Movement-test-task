@@ -236,7 +236,7 @@ public class MyCharacterControler : MonoBehaviour
         if (WallCheck(transform.right, 3f, 0))
         {
             animator.Play(LiteRunAnimation);
-            rb.velocity = inputHorizontal * transform.right; // new Vector2(inputHorizontal.x /** runSpeed * 0.7f*/, inputHorizontal.y);
+            rb.velocity = inputHorizontal;
         }
         else
         {
@@ -248,7 +248,7 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (WallCheck(transform.right, 3f, 0))
         {
-            rb.velocity = inputHorizontal * transform.right; //new Vector2(inputHorizontal.x /** runSpeed * 0.8f*/, inputHorizontal.y);
+            rb.velocity = inputHorizontal;
             animator.Play(LiteRunAnimation);
         }
         else
@@ -260,7 +260,7 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (WallCheck(transform.right, 3f, 0))
         {
-            rb.velocity = inputHorizontal * transform.right;  //new Vector2(inputHorizontal.x * runSpeed, inputHorizontal.y);
+            rb.velocity = inputHorizontal;
             animator.Play(HardRunAnimation);
         }
         else

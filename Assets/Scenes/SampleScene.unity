@@ -4107,7 +4107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 10
-  runSpeed: 25
+  runSpeed: 20
   runAccelorationTime: 5
   dashSpeed: 20
   dashDuration: 1

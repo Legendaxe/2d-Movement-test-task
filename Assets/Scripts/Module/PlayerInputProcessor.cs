@@ -154,7 +154,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                             runDashBoost = 1;
                             moveType = MoveType.GO;
                         }
-                        Value = new Vector2(runCurrentSpeed,0);
+                        Value = new Vector2(runCurrentSpeed*inputHorizontal,0);
                     }
                 }
                 else if (Control.Player.ObstecleInteractionKey.phase == InputActionPhase.Performed)
@@ -200,7 +200,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                 moveType = characterController.Movetype;
                 if (InputPossibility())
                 {
-                    if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x > 0))
+                    if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x > 0) && (!injurityController.InjurityCheck("Legs")))
                     {
                         moveType = MoveType.Dash;
                         characterController.DashTimer = Time.time;
@@ -221,7 +221,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
         if (obj.canceled)
         {
             LeftDashTimer = Time.time;
-        }
+        } 
         else if (obj.performed)
         {
             if (Time.time - LeftDashTimer < 0.2f)
@@ -229,7 +229,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                 moveType = characterController.Movetype;
                 if (InputPossibility())
                 {
-                    if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x < 0))
+                    if (((moveType == MoveType.Idle) || (moveType == MoveType.Walk) || (moveType == MoveType.Crouch)) && (stand != 2) && (direction.x < 0) &&(!injurityController.InjurityCheck("Legs")))
                     {
                         moveType = MoveType.Dash;
                         characterController.DashTimer = Time.time;
