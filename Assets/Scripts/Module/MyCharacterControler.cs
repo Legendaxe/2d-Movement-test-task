@@ -16,6 +16,7 @@ public class MyCharacterControler : MonoBehaviour
     [Header("Movement Animations")]
     [SerializeField] private string StandAnimation = "Stand";
     [SerializeField] private string LiteRunAnimation = "Stand";
+    [SerializeField] private string MediumRunAnimation = "Stand";
     [SerializeField] private string HardRunAnimation = "Stand";
     [SerializeField] private string CrouchAnimation = "Stand";
     [SerializeField] private string DownCrouchAnimation = "Stand";
@@ -249,7 +250,7 @@ public class MyCharacterControler : MonoBehaviour
         if (WallCheck(transform.right, 3f, 0))
         {
             rb.velocity = inputHorizontal;
-            animator.Play(LiteRunAnimation);
+            animator.Play(MediumRunAnimation);
         }
         else
         {
@@ -281,7 +282,7 @@ public class MyCharacterControler : MonoBehaviour
                 movetype = MoveType.Steady;
             }
             else
-                rb.velocity = new Vector2(transform.right.x * runSpeed * 0.7f, inputHorizontal.y);
+                rb.velocity = new Vector2(transform.right.x * runSpeed * 0.7f, rb.velocity.y + inputHorizontal.y);
         }
         else
         {

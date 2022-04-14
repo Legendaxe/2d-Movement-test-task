@@ -39,6 +39,7 @@ public class MoveHandler : MonoBehaviour
             movement += modifier.Value;
             
         }
+        print(movement);
         foreach (IMovementModifier modifier in MovementMultiplyModifiers)
         {
             movement *= modifier.Value;
