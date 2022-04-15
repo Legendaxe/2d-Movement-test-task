@@ -6,13 +6,22 @@ public class MyCharacterControler : MonoBehaviour
     
     // Information about movement;
     [Header("Movement settings")]
+    
     [SerializeField] private float walkSpeed;
+    [SerializeField] private float slowWalkSpeed;
+    [SerializeField] private float crouchSpeed;
+    [SerializeField] private float slowCrouchSpeed;
+
     [SerializeField] private float runSpeed;
     [SerializeField] private float runAccelorationTime;
-    [SerializeField] private float dashSpeed;
+    [SerializeField] private float dashBoost;
     [SerializeField] private float dashDuration;
+    [SerializeField] private float reDashDuration;
+   
+    [SerializeField] private float grabSpeed;
+
     [SerializeField] private float liftSpeed;
-    [SerializeField] private float crouchSpeed;
+    
     [Header("Movement Animations")]
     [SerializeField] private string StandAnimation = "Stand";
     [SerializeField] private string LiteRunAnimation = "Stand";
@@ -118,6 +127,7 @@ public class MyCharacterControler : MonoBehaviour
     public float LiftSpeed { get { return liftSpeed; } }
     public float RunAccelorationTime { get { return runAccelorationTime; } }
     public float RunMaxSpeed { get { return runSpeed; } }
+    public float DashBoost { get { return dashBoost; } }
     public float LiftTimer { set { liftTimer = value; } }
     public float LiftDuration { set { liftDuration = value; } }
     public float DashTimer { set { dashTimer = value; } }
@@ -307,7 +317,7 @@ public class MyCharacterControler : MonoBehaviour
     {
         if (reDashStatus)
         {
-            if(reDashTimer < .5f)
+            if(reDashTimer < reDashDuration)
             {
                 reDashTimer += Time.fixedDeltaTime;
                 rb.velocity = new Vector2(rb.velocity.x*0.5f, rb.velocity.y);
@@ -336,8 +346,8 @@ public class MyCharacterControler : MonoBehaviour
     public void Grab(Vector2 inputHorizontal)
     {
         animator.Play(GrabAnimation);
-        rb.velocity = inputHorizontal * crouchSpeed;
-        grabBody.velocity = inputHorizontal * crouchSpeed;
+        rb.velocity = inputHorizontal * grabSpeed;
+        grabBody.velocity = inputHorizontal * grabSpeed;
     }
 
     public void Lift()

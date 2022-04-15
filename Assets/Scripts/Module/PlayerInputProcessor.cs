@@ -25,7 +25,8 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     private float runAccelorationTime;
     private float runAcceloration;
 
-    private float runDashBoost = 1;
+    private float currentDashBoost = 1;
+    private float dashBoost;
     private MoveType moveType;
 
 
@@ -51,7 +52,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
 
     public Vector2 Value { get; private set; }
     public float RunTimer { set { runCurrentSpeed = value; } }
-    public float RunTimerModify { get { return runDashBoost; }  set { runDashBoost = value; } }
+    public float RunTimerModify { get { return currentDashBoost; }  set { currentDashBoost = value; } }
 
 
     private void Awake()
@@ -92,6 +93,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
         runAcceloration = runMaxSpeed / runAccelorationTime;
         runMinSpeed = runMaxSpeed * 0.5f;
         runCurrentSpeed = runMinSpeed;
+        dashBoost = characterController.DashBoost;
         capsLock = false;
     }
 
@@ -146,17 +148,17 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                         if (runCurrentSpeed < runMaxSpeed * 0.7f)
                         {
                             moveType = MoveType.Ready;
-                            runCurrentSpeed += Time.deltaTime * runAcceloration * runDashBoost;
+                            runCurrentSpeed += Time.deltaTime * runAcceloration * currentDashBoost;
                             stand = 0;
                         }
                         else if (runCurrentSpeed < runMaxSpeed)
                         {
                             moveType = MoveType.Steady;
-                            runCurrentSpeed += Time.deltaTime * runAcceloration * runDashBoost;
+                            runCurrentSpeed += Time.deltaTime * runAcceloration * currentDashBoost;
                         }
                         else
                         {
-                            runDashBoost = 1;
+                            currentDashBoost = 1;
                             moveType = MoveType.GO;
                         }
                         Value = new Vector2(runCurrentSpeed * inputHorizontal, 0);
@@ -222,7 +224,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     {
                         moveType = MoveType.Dash;
                         characterController.DashTimer = Time.time;
-                        runDashBoost = 1.5f;
+                        currentDashBoost = dashBoost;
                         stand = 0;
                         Value = Vector2.right * inputHorizontal;
                     }
@@ -251,7 +253,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     {
                         moveType = MoveType.Dash;
                         characterController.DashTimer = Time.time;
-                        runDashBoost = 1.5f;
+                        currentDashBoost = dashBoost;
                         stand = 0;
                         Value = Vector2.right * inputHorizontal;
                     }

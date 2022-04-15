@@ -4120,12 +4120,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 10
+  slowWalkSpeed: 5
+  crouchSpeed: 5
+  slowCrouchSpeed: 3
   runSpeed: 20
   runAccelorationTime: 5
-  dashSpeed: 20
+  dashBoost: 5
   dashDuration: 1
+  reDashDuration: 0.5
+  grabSpeed: 5
   liftSpeed: 6
-  crouchSpeed: 5
   StandAnimation: Stand
   LiteRunAnimation: LiteRun
   MediumRunAnimation: MediumRun
