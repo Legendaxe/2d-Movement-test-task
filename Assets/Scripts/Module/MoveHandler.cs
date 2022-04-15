@@ -39,7 +39,6 @@ public class MoveHandler : MonoBehaviour
             movement += modifier.Value;
             
         }
-        print(movement);
         foreach (IMovementModifier modifier in MovementMultiplyModifiers)
         {
             movement *= modifier.Value;
@@ -76,7 +75,7 @@ public class MoveHandler : MonoBehaviour
                     }
                 case MoveType.Steady: // Second run stage
                     {
-                        characterControler.FirstRunStage(inputHorizontal);
+                        characterControler.SecondRunStage(inputHorizontal);
                         break;
                     }
                 case MoveType.GO: // Third run stage

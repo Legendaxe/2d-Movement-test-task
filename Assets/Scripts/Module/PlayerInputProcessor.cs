@@ -90,7 +90,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
         runAccelorationTime = characterController.RunAccelorationTime;
         runMaxSpeed = characterController.RunMaxSpeed;
         runAcceloration = runMaxSpeed / runAccelorationTime;
-        runMinSpeed = runMaxSpeed * 0.6f;
+        runMinSpeed = runMaxSpeed * 0.5f;
         runCurrentSpeed = runMinSpeed;
         capsLock = false;
     }
@@ -143,7 +143,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     }
                     else
                     {
-                        if (runCurrentSpeed < runMaxSpeed * 0.8f)
+                        if (runCurrentSpeed < runMaxSpeed * 0.7f)
                         {
                             moveType = MoveType.Ready;
                             runCurrentSpeed += Time.deltaTime * runAcceloration * runDashBoost;

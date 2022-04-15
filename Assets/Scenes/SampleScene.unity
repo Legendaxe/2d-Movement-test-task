@@ -3816,7 +3816,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2087241245}
   - component: {fileID: 2087241246}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Torso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4128,7 +4128,7 @@ MonoBehaviour:
   crouchSpeed: 5
   StandAnimation: Stand
   LiteRunAnimation: LiteRun
-  MediumRunAnimation: Stand
+  MediumRunAnimation: MediumRun
   HardRunAnimation: HardRun
   CrouchAnimation: Stand
   DownCrouchAnimation: Stand
