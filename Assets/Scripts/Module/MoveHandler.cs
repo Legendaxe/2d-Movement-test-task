@@ -89,6 +89,11 @@ public class MoveHandler : MonoBehaviour
                         characterControler.Dash(inputHorizontal.normalized);
                         break;
                     }
+                case MoveType.ReDash:
+                    {
+                        characterControler.ReDash();
+                        break;
+                    }
                 case MoveType.Fall: // Fall
                     {
                         characterControler.Fall();

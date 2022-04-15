@@ -21,6 +21,7 @@ public class MyCharacterControler : MonoBehaviour
     [SerializeField] private string CrouchAnimation = "Stand";
     [SerializeField] private string DownCrouchAnimation = "Stand";
     [SerializeField] private string DashAnimation = "Stand";
+    [SerializeField] private string ReDashAnimation = "Stand";
     [SerializeField] private string SitAnimation = "Stand";
     [SerializeField] private string LieAnimation = "Stand";
     [SerializeField] private string FallAnimation = "Stand";
@@ -44,6 +45,7 @@ public class MyCharacterControler : MonoBehaviour
         Steady,
         GO,
         Dash,
+        ReDash,
         Fall,
         Grab,
         SoloLifting,
@@ -62,6 +64,8 @@ public class MyCharacterControler : MonoBehaviour
 
     private float dashTimer;
     private bool dashStatus;
+    private float reDashTimer;
+    private bool reDashStatus;
 
 
 
@@ -102,6 +106,7 @@ public class MyCharacterControler : MonoBehaviour
         
         dashTimer = 0;
         dashStatus = false;
+        reDashStatus = false;
         liftTimer = 0;
         liftFirstStage = false;
         liftSecondStage = false;
@@ -281,8 +286,15 @@ public class MyCharacterControler : MonoBehaviour
                 dashStatus = false;
                 movetype = MoveType.Steady;
             }
+            else if (IsGrounded())
+            {
+                rb.velocity = new Vector2(transform.right.x * runSpeed * 0.7f, inputHorizontal.y);
+            }
             else
-                rb.velocity = new Vector2(transform.right.x * runSpeed * 0.7f, rb.velocity.y + inputHorizontal.y);
+            {
+                movetype = MoveType.Fall;
+                dashStatus = false;
+            }
         }
         else
         {
@@ -290,6 +302,31 @@ public class MyCharacterControler : MonoBehaviour
             animator.Play(DashAnimation);
         }
     }
+
+    public void ReDash()
+    {
+        if (reDashStatus)
+        {
+            if(reDashTimer < .5f)
+            {
+                reDashTimer += Time.fixedDeltaTime;
+                rb.velocity = new Vector2(rb.velocity.x*0.5f, rb.velocity.y);
+            }
+            else
+            {
+                reDashStatus = false;
+                RotateCharacter(0, 180, 0);
+                movetype = MoveType.Steady;
+            }
+        }
+        else
+        {
+            animator.Play(ReDashAnimation);
+            reDashTimer = 0;
+            reDashStatus = true;
+        }
+    }
+
     public void Fall()
     {
         stand = 0;

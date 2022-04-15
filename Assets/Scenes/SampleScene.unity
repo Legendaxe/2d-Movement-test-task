@@ -597,6 +597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 186110496}
   - component: {fileID: 186110497}
+  - component: {fileID: 186110498}
   m_Layer: 0
   m_Name: Endurance
   m_TagString: Untagged
@@ -677,6 +678,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &186110498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186110495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8768c3767d8a6304b99b5b0c6cae48ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endurance: {fileID: 2106389169}
 --- !u!1 &283966510
 GameObject:
   m_ObjectHideFlags: 0
@@ -4031,7 +4045,6 @@ MonoBehaviour:
   endurance: 100
   enduranceRegenSpeed: 2
   enduranceWasteSpeed: 5
-  enduranceSlider: {fileID: 186110497}
 --- !u!114 &2106389170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4115,10 +4128,12 @@ MonoBehaviour:
   crouchSpeed: 5
   StandAnimation: Stand
   LiteRunAnimation: LiteRun
+  MediumRunAnimation: Stand
   HardRunAnimation: HardRun
   CrouchAnimation: Stand
   DownCrouchAnimation: Stand
   DashAnimation: Dash
+  ReDashAnimation: ReDash
   SitAnimation: Stand
   LieAnimation: Stand
   FallAnimation: Stand

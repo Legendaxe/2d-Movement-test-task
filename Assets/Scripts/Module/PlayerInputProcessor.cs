@@ -19,9 +19,9 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     // Movement staff
     private Vector2 direction;
     private int stand;
-    private bool dashStatus;
     private float runCurrentSpeed;
     private float runMaxSpeed;
+    private float runMinSpeed;
     private float runAccelorationTime;
     private float runAcceloration;
 
@@ -40,6 +40,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     // Input staff
     private bool capsLock;
     private float inputHorizontal;
+    private bool changeDirection;
     private float LeftDashTimer;
     private float RightDashTimer;
     private float inputAcceloration = .05f;
@@ -89,8 +90,8 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
         runAccelorationTime = characterController.RunAccelorationTime;
         runMaxSpeed = characterController.RunMaxSpeed;
         runAcceloration = runMaxSpeed / runAccelorationTime;
-        runCurrentSpeed = runMaxSpeed * 0.6f;
-
+        runMinSpeed = runMaxSpeed * 0.6f;
+        runCurrentSpeed = runMinSpeed;
         capsLock = false;
     }
 
@@ -111,7 +112,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
 
     private bool InputPossibility()
     {
-        if ((moveType != MoveType.Dash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
+        if ((moveType != MoveType.Dash) && (moveType != MoveType.ReDash) && (moveType != MoveType.SoloLifting) && (moveType != MoveType.OverJump))
         {
             if (characterController.IsGrounded())
             {
@@ -130,32 +131,37 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
             if (inputHorizontal != 0)
             {
                 Value = Vector2.right * inputHorizontal;
-                // Rotate character if he changed direction
                 if (inputHorizontal * direction.x < 0)
-                    characterController.RotateCharacter(0, 180, 0);
+                    changeDirection = true;
                 direction.x = inputHorizontal > 0 ? 1 : -1;
-                if (Control.Player.RunButton.phase == InputActionPhase.Performed)
+                if ((Control.Player.RunButton.phase == InputActionPhase.Performed)&& (enduranceController.CurrentEndurance > 5))
                 {
-                    if (enduranceController.CurrentEndurance > 5)
+                    if (changeDirection)
+                    {
+                        moveType = MoveType.ReDash;
+                        changeDirection = false;
+                    }
+                    else
                     {
                         if (runCurrentSpeed < runMaxSpeed * 0.8f)
                         {
                             moveType = MoveType.Ready;
-                            runCurrentSpeed += Time.deltaTime * runAcceloration*runDashBoost;
+                            runCurrentSpeed += Time.deltaTime * runAcceloration * runDashBoost;
                             stand = 0;
                         }
                         else if (runCurrentSpeed < runMaxSpeed)
                         {
                             moveType = MoveType.Steady;
-                            runCurrentSpeed += Time.deltaTime * runAcceloration*runDashBoost;
+                            runCurrentSpeed += Time.deltaTime * runAcceloration * runDashBoost;
                         }
                         else
                         {
                             runDashBoost = 1;
                             moveType = MoveType.GO;
                         }
-                        Value = new Vector2(runCurrentSpeed*inputHorizontal,0);
+                        Value = new Vector2(runCurrentSpeed * inputHorizontal, 0);
                     }
+
                 }
                 else if (Control.Player.ObstecleInteractionKey.phase == InputActionPhase.Performed)
                 {
@@ -171,15 +177,20 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                 else
                     moveType = MoveType.Walk;
 
+                if (changeDirection)
+                {
+                    characterController.RotateCharacter(0, 180, 0);
+                    changeDirection = false;
+                }
                 if (Control.Player.RunButton.phase != InputActionPhase.Performed)
-                    runCurrentSpeed = runMaxSpeed * 0.6f;
+                    runCurrentSpeed = runMinSpeed;
                 if (injurityController.InjurityCheck("Legs"))
                     moveType = MoveType.Crouch;
             }
             else
             {
                 moveType = MoveType.Idle;
-                runCurrentSpeed = runMaxSpeed * 0.6f;
+                runCurrentSpeed = runMinSpeed;
             }
         }
         characterController.Movetype = moveType;

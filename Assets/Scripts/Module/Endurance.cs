@@ -15,16 +15,16 @@ public class Endurance : MonoBehaviour
     [SerializeField] private int enduranceRegenSpeed;
     [SerializeField] private int enduranceWasteSpeed;
 
-    [Header("UI")]
-    [SerializeField] private Slider enduranceSlider;
 
     private float currentEndurance;
     private float enduranceTimer;
 
+    public float CurrentEndurance { get { return currentEndurance; } }
+
+
     private void Start()
     {
         currentEndurance = endurance;
-        enduranceSlider.value = currentEndurance;
         enduranceTimer = 10;
     }
 
@@ -44,10 +44,6 @@ public class Endurance : MonoBehaviour
             currentEndurance -= enduranceWasteSpeed;
             enduranceTimer = 10;
         }
-        enduranceSlider.value = currentEndurance;
         enduranceTimer -= Time.deltaTime;
     }
-
-    public float CurrentEndurance { get { return currentEndurance; } } 
-
 }
