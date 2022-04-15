@@ -134,7 +134,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                 if (inputHorizontal * direction.x < 0)
                     changeDirection = true;
                 direction.x = inputHorizontal > 0 ? 1 : -1;
-                if ((Control.Player.RunButton.phase == InputActionPhase.Performed)&& (enduranceController.CurrentEndurance > 5))
+                if ((Control.Player.RunButton.phase == InputActionPhase.Performed) && (enduranceController.CurrentEndurance > 5) && !injurityController.InjurityCheck("Legs"))
                 {
                     if (changeDirection)
                     {
@@ -177,15 +177,22 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                 else
                     moveType = MoveType.Walk;
 
+                if (injurityController.InjurityCheck("Legs"))
+                {
+                    if (stand == 1)
+                        moveType = MoveType.Idle;
+                    else
+                        moveType = MoveType.Crouch;
+                }
+
                 if (changeDirection)
                 {
                     characterController.RotateCharacter(0, 180, 0);
                     changeDirection = false;
                 }
+
                 if (Control.Player.RunButton.phase != InputActionPhase.Performed)
                     runCurrentSpeed = runMinSpeed;
-                if (injurityController.InjurityCheck("Legs"))
-                    moveType = MoveType.Crouch;
             }
             else
             {
