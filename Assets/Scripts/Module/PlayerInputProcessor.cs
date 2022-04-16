@@ -24,6 +24,8 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     private float runMinSpeed;
     private float runAccelorationTime;
     private float runAcceloration;
+    private float runDecelerationTime;
+    private float runDeceleration;
 
     private float currentDashBoost = 1;
     private float dashBoost;
@@ -90,9 +92,13 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
 
         runAccelorationTime = characterController.RunAccelorationTime;
         runMaxSpeed = characterController.RunMaxSpeed;
-        runAcceloration = runMaxSpeed / runAccelorationTime;
+        runAcceloration = runMaxSpeed * 0.5f / runAccelorationTime;
         runMinSpeed = runMaxSpeed * 0.5f;
         runCurrentSpeed = runMinSpeed;
+
+        runDecelerationTime = characterController.RunDecelerationTime;
+        runDeceleration = runMaxSpeed * 0.5f / runDecelerationTime;
+
         dashBoost = characterController.DashBoost;
         capsLock = false;
     }
@@ -165,6 +171,24 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     }
 
                 }
+                else if((moveType == MoveType.Ready) || (moveType == MoveType.Steady) || (moveType == MoveType.GO))
+                {
+                    if (runCurrentSpeed < runMinSpeed)
+                    {
+                        moveType = MoveType.Walk;
+                    }
+                    else if (runCurrentSpeed < runMaxSpeed*0.7f)
+                    {
+                        moveType = MoveType.Ready;
+                        runCurrentSpeed -= Time.deltaTime * runDeceleration * currentDashBoost;
+                    }
+                    else
+                    {
+                        moveType = MoveType.Steady;
+                        runCurrentSpeed -= Time.deltaTime * runDeceleration * currentDashBoost;
+                    }
+                    Value = new Vector2(runCurrentSpeed * inputHorizontal, 0);
+                }
                 else if (Control.Player.ObstecleInteractionKey.phase == InputActionPhase.Performed)
                 {
                     if (characterController.WallCheck(direction, 3f, -characterController.HalfOfCharacterHeight) && characterController.GrabCheck())
@@ -193,8 +217,6 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     changeDirection = false;
                 }
 
-                if (Control.Player.RunButton.phase != InputActionPhase.Performed)
-                    runCurrentSpeed = runMinSpeed;
             }
             else
             {

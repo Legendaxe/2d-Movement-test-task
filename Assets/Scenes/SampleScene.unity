@@ -4168,6 +4168,7 @@ MonoBehaviour:
   slowCrouchSpeed: 3
   runSpeed: 20
   runAccelorationTime: 5
+  runDecelerationTime: 2
   dashBoost: 5
   dashDuration: 1
   reDashDuration: 0.5

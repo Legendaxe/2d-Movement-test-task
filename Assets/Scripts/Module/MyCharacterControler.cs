@@ -14,6 +14,7 @@ public class MyCharacterControler : MonoBehaviour
 
     [SerializeField] private float runSpeed;
     [SerializeField] private float runAccelorationTime;
+    [SerializeField] private float runDecelerationTime;
     [SerializeField] private float dashBoost;
     [SerializeField] private float dashDuration;
     [SerializeField] private float reDashDuration;
@@ -126,6 +127,7 @@ public class MyCharacterControler : MonoBehaviour
     public int Stand { get { return stand; } set { stand = value; } }
     public float LiftSpeed { get { return liftSpeed; } }
     public float RunAccelorationTime { get { return runAccelorationTime; } }
+    public float RunDecelerationTime { get { return runDecelerationTime; } }
     public float RunMaxSpeed { get { return runSpeed; } }
     public float DashBoost { get { return dashBoost; } }
     public float LiftTimer { set { liftTimer = value; } }
