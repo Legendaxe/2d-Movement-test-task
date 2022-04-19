@@ -21,6 +21,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
     private int stand;
     private float runCurrentSpeed;
     private float runMaxSpeed;
+    private float runMidSpeed;
     private float runMinSpeed;
     private float runAccelorationTime;
     private float runAcceloration;
@@ -91,13 +92,15 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
         RightDashTimer = 0;
 
         runAccelorationTime = characterController.RunAccelorationTime;
+        runMinSpeed = characterController.RunMinSpeed;
+        runMidSpeed = characterController.RunMidSpeed;
         runMaxSpeed = characterController.RunMaxSpeed;
-        runAcceloration = runMaxSpeed * 0.5f / runAccelorationTime;
-        runMinSpeed = runMaxSpeed * 0.5f;
+        
+        runAcceloration = (runMaxSpeed - runMinSpeed) / runAccelorationTime;
         runCurrentSpeed = runMinSpeed;
 
         runDecelerationTime = characterController.RunDecelerationTime;
-        runDeceleration = runMaxSpeed * 0.5f / runDecelerationTime;
+        runDeceleration = (runMaxSpeed -runMinSpeed) / runDecelerationTime;
 
         dashBoost = characterController.DashBoost;
         capsLock = false;
@@ -151,7 +154,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     }
                     else
                     {
-                        if (runCurrentSpeed < runMaxSpeed * 0.7f)
+                        if (runCurrentSpeed < runMidSpeed)
                         {
                             moveType = MoveType.Ready;
                             runCurrentSpeed += Time.deltaTime * runAcceloration * currentDashBoost;
@@ -177,7 +180,7 @@ public class PlayerInputProcessor : MonoBehaviour, IMovementModifier
                     {
                         moveType = MoveType.Walk;
                     }
-                    else if (runCurrentSpeed < runMaxSpeed*0.7f)
+                    else if (runCurrentSpeed < runMidSpeed)
                     {
                         moveType = MoveType.Ready;
                         runCurrentSpeed -= Time.deltaTime * runDeceleration * currentDashBoost;

@@ -12,7 +12,9 @@ public class MyCharacterControler : MonoBehaviour
     [SerializeField] private float crouchSpeed;
     [SerializeField] private float slowCrouchSpeed;
 
-    [SerializeField] private float runSpeed;
+    [SerializeField] private float runMinSpeed;
+    [SerializeField] private float runMidSpeed;
+    [SerializeField] private float runMaxSpeed;
     [SerializeField] private float runAccelorationTime;
     [SerializeField] private float runDecelerationTime;
     [SerializeField] private float dashBoost;
@@ -128,7 +130,9 @@ public class MyCharacterControler : MonoBehaviour
     public float LiftSpeed { get { return liftSpeed; } }
     public float RunAccelorationTime { get { return runAccelorationTime; } }
     public float RunDecelerationTime { get { return runDecelerationTime; } }
-    public float RunMaxSpeed { get { return runSpeed; } }
+    public float RunMinSpeed { get { return runMinSpeed; } }
+    public float RunMidSpeed { get { return runMidSpeed; } }
+    public float RunMaxSpeed { get { return runMaxSpeed; } }
     public float DashBoost { get { return dashBoost; } }
     public float LiftTimer { set { liftTimer = value; } }
     public float LiftDuration { set { liftDuration = value; } }
@@ -300,7 +304,7 @@ public class MyCharacterControler : MonoBehaviour
             }
             else if (IsGrounded())
             {
-                rb.velocity = new Vector2(transform.right.x * runSpeed * 0.7f, inputHorizontal.y);
+                rb.velocity = new Vector2(transform.right.x * runMaxSpeed * 0.7f, inputHorizontal.y);
             }
             else
             {

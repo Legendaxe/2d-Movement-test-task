@@ -4166,7 +4166,9 @@ MonoBehaviour:
   slowWalkSpeed: 5
   crouchSpeed: 5
   slowCrouchSpeed: 3
-  runSpeed: 20
+  runMinSpeed: 10
+  runMidSpeed: 11
+  runMaxSpeed: 15
   runAccelorationTime: 5
   runDecelerationTime: 2
   dashBoost: 5
